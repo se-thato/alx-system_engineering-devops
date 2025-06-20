@@ -1,2 +1,2 @@
 #!/bin/bash
-for a in {a..z}; do for b in {a..z}; do if [ "$a$b" != "oo" ]; then echo "$a$b"; fi; done; done
+awk 'BEGIN{for(a=97;a<=122;a++)for(b=97;b<=122;b++)if(a!=111||b!=111)printf "%c%c\n",a,b}'
