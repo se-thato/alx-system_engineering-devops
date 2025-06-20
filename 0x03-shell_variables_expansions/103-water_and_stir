@@ -1,0 +1,2 @@
+#!/bin/bash
+echo "obase=9; $(echo $(( $(echo "$WATER" | tr 'waetr' 01234 | awk '{print "ibase=5;"$0}' | bc) + $(echo "$STIR" | tr 'rits.' 01234 | awk '{print "ibase=5;"$0}' | bc) ))" | bc)" | tr 012345678 bestchol
