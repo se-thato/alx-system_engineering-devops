@@ -1,5 +1,25 @@
 # 0x0B-ssh
 
+## Task 0: Use a Private SSH Key to Connect to a Server
+
+### Task Description
+
+This task involves creating a Bash script that uses SSH to connect to a remote server using a specified private key.
+
+The goal is to automate an SSH connection using the private key located at:
+
+###  Requirements
+
+- The SSH connection must:
+  - Use the **private key** located at `~/.ssh/school`
+  - Connect as user **ubuntu**
+  - Use only **single-character flags** (`-i`)
+  - **Not** use the `-l` flag
+  - **Not** handle passphrase-protected keys
+
+
+# 0x0B-ssh
+
 ## Task: Create an SSH Key Pair
 
 ###  Task Description
