@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # 0x0B-ssh
 
 ## Task 0: Use a Private SSH Key to Connect to a Server
