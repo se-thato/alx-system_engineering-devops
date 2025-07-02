@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
-# Bash script to connect to a server using SSH and a private key
+# Script connects to a remote server using SSH with the private key ~/.ssh/school
 
-ssh -i ~/.ssh/school ubuntu@8.8.8.8
-
+ssh -i ~/.ssh/school ubuntu@3.91.145.41
 
 # 0x0B-ssh
 
