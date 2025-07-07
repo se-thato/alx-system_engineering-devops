@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Check if less than 4 parameters were passed
 if [ "$#" -lt 4 ]; then
