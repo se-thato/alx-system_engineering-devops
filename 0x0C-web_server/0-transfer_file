@@ -1,4 +1,5 @@
-#!/usr/bin/env bash
+#!/bin/bash
+# Bash script that transfers a file to a remote server using SCP
 
 # Check if less than 4 parameters were passed
 if [ "$#" -lt 4 ]; then
@@ -7,10 +8,11 @@ if [ "$#" -lt 4 ]; then
 fi
 
 # Assign parameters to variables
-FILE_PATH="$1"
-SERVER_IP="$2"
-USERNAME="$3"
-SSH_KEY="$4"
+FILE="$1"
+IP="$2"
+USER="$3"
+KEY="$4"
 
-# Transfer file using scp to user's home directory
-scp -i "$SSH_KEY" -o StrictHostKeyChecking=no "$FILE_PATH" "$USERNAME@$SERVER_IP:~/"
+# Use scp to copy the file to the user's home directory on the server
+scp -i "$KEY" -o StrictHostKeyChecking=no "$FILE" "$USER@$IP:~/"
+
