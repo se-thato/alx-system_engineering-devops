@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Bash script that transfers a file to a remote server using SCP
 
 # Check if less than 4 parameters were passed
