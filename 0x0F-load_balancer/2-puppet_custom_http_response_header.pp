@@ -1,27 +1,27 @@
-# Puppet manifest to install and configure Nginx with a custom X-Served-By header
-
+# Install nginx
 package { 'nginx':
   ensure => installed,
 }
 
+# Ensure nginx service is enabled and running
 service { 'nginx':
   ensure     => running,
   enable     => true,
   hasrestart => true,
-  hasstatus  => true,
   require    => Package['nginx'],
 }
 
-# Set the custom header in the default Nginx site config
-exec { 'add_x_served_by_header':
-  command => "/bin/sed -i '/location \\/ {/a \\\\tadd_header X-Served-By \\\"${hostname}\\\";' /etc/nginx/sites-available/default",
-  unless  => "/bin/grep -q 'add_header X-Served-By' /etc/nginx/sites-available/default",
+# Insert custom header using Puppet fact
+exec { 'insert_x_served_by_header':
+  command => "sed -i '/location \\/ {/a \\    add_header X-Served-By \"${::hostname}\";' /etc/nginx/sites-available/default",
+  unless  => "grep -q 'add_header X-Served-By' /etc/nginx/sites-available/default",
   require => Package['nginx'],
 }
 
-# Reload Nginx to apply the config change
+# Reload nginx if config was modified
 exec { 'reload_nginx':
-  command     => '/usr/sbin/nginx -t && /bin/systemctl reload nginx',
+  command     => '/usr/sbin/nginx -t && systemctl reload nginx',
   refreshonly => true,
-  subscribe   => Exec['add_x_served_by_header'],
+  subscribe   => Exec['insert_x_served_by_header'],
 }
+
