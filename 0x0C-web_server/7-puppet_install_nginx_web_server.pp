@@ -1,5 +1,4 @@
-# 7-puppet_install_nginx_web_server.pp
-# Installs Nginx, sets up Hello World homepage, and adds a 301 redirect from /redirect_me
+# Installs Nginx and configures Hello World homepage with a 301 redirect for /redirect_me
 
 package { 'nginx':
   ensure => installed,
@@ -12,17 +11,18 @@ service { 'nginx':
   require    => Package['nginx'],
 }
 
+# Ensure Hello World! page exists
 file { '/var/www/html/index.html':
   ensure  => file,
   content => "Hello World!\n",
   require => Package['nginx'],
 }
 
+# Replace Nginx default config with working redirect config
 file { '/etc/nginx/sites-available/default':
   ensure  => file,
-  content => @(EOF),
+  content => @(EOC),
   notify  => Service['nginx'],
-  require => Package['nginx'],
 server {
     listen 80 default_server;
     listen [::]:80 default_server;
@@ -40,6 +40,6 @@ server {
         try_files \$uri \$uri/ =404;
     }
 }
-  | EOF
+  | EOC
 }
 
