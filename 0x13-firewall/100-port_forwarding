@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Backup the original before.rules
+cp /etc/ufw/before.rules /etc/ufw/before.rules.bak
+
+# Insert NAT rule to redirect 8080 to 80 before *filter block
+awk '
+/^\*filter/ && !done {
+    print "*nat"
+    print ":PREROUTING ACCEPT [0:0]"
+    print "-A PREROUTING -p tcp --dport 8080 -j REDIRECT --to-port 80"
+    print "COMMIT"
+    done=1
+}
+{ print }
+' /etc/ufw/before.rules.bak > /etc/ufw/before.rules
+
+# Allow port 8080 via UFW
+ufw allow 8080/tcp
+
+# Reload UFW to apply changes
+ufw reload
+
+# Display success message
+echo "Port 8080 is now forwarded to port 80 via UFW"
