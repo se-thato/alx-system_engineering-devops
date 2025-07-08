@@ -1,4 +1,5 @@
 #!/bin/bash
+# This script configures UFW to forward TCP traffic from port 8080 to port 80
 
 # Backup the original before.rules
 cp /etc/ufw/before.rules /etc/ufw/before.rules.bak
@@ -23,3 +24,4 @@ ufw reload
 
 # Display success message
 echo "Port 8080 is now forwarded to port 80 via UFW"
+
