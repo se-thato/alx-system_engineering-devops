@@ -25,4 +25,4 @@ frontend https-in
 backend webservers
     balance roundrobin
     option httpchk
-    server web1 127.0.0.1:80 check
+    server web1 197.185.176.88 check
