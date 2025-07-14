@@ -1,23 +1,19 @@
 #!/usr/bin/env bash
-# Script to retrieve DNS A record info for subdomains
-
 # shellcheck disable=SC2086
 
-domain=$1
-subdomain=$2
+domain="$1"
+subdomain="$2"
 
-# Function to perform DNS lookup and format output
 get_record_info() {
-    local full_domain=$1
-    local sub_name=$(echo "$full_domain" | cut -d. -f1)
-
-    record=$(dig $full_domain +short)
-    if [[ -n "$record" ]]; then
-        echo "The subdomain $sub_name is a A record and points to $record"
-    fi
+    local sub="$1"
+    local dom="$2"
+    local full="${sub}.${dom}"
+    dig "$full" | awk -v sub="$sub" '
+        $1 == ";;" && $2 == "ANSWER" && $3 == "SECTION:" {getline; print "The subdomain " sub " is a " $4 " record and points to " $5; found=1}
+        END {if (!found) print "The subdomain " sub " is a record and points to "}
+    '
 }
 
-# Validate input
 if [[ -z "$domain" ]]; then
     echo "Usage: $0 <domain> [subdomain]"
     exit 1
@@ -25,9 +21,8 @@ fi
 
 if [[ -z "$subdomain" ]]; then
     for name in www lb-01 web-01 web-02; do
-        get_record_info "$name.$domain"
+        get_record_info "$name" "$domain"
     done
 else
-    get_record_info "$subdomain.$domain"
+    get_record_info "$subdomain" "$domain"
 fi
-
