@@ -1,37 +1,34 @@
 #!/usr/bin/env bash
-# Script: 0-world_wide_web
-# Description: Displays DNS info for given domain and subdomains
+# Script to retrieve subdomain DNS record info
 
-# Function to get DNS info
-get_subdomain_info() {
-  local domain="$1"
-  local sub="$2"
-  local full="${sub}.${domain}"
-  local result=$(dig "$full" +short)
+domain=$1
+subdomain=$2
 
-  if [[ -n "$result" ]]; then
-    local type=$(dig "$full" | awk '/IN/ && $4 == "A" { print $4; exit }')
-    echo "The subdomain ${sub} is a ${type} record and points to ${result}"
-  else
-    echo "No record found for subdomain ${sub}"
-  fi
+# Ignore SC2086 as required
+# shellcheck disable=SC2086
+
+get_record_info() {
+    full_domain=$1
+    result=$(dig $full_domain | grep -A1 'ANSWER SECTION:' | tail -n1)
+
+    if [ -n "$result" ]; then
+        record_type=$(echo $result | awk '{print $3}')
+        destination=$(echo $result | awk '{print $5}')
+        sub=$(echo $full_domain | cut -d'.' -f1)
+        echo "The subdomain $sub is a $record_type record and points to $destination"
+    fi
 }
 
-# Main logic
-domain="$1"
-subdomain="$2"
-
-# Check if domain is provided
-if [[ -z "$domain" ]]; then
-  echo "Usage: $0 <domain> [subdomain]"
-  exit 1
+if [ -z "$domain" ]; then
+    echo "Usage: $0 <domain> [subdomain]"
+    exit 1
 fi
 
-# If only domain is provided
-if [[ -z "$subdomain" ]]; then
-  for sub in www lb-01 web-01 web-02; do
-    get_subdomain_info "$domain" "$sub"
-  done
+if [ -z "$subdomain" ]; then
+    for sub in www lb-01 web-01 web-02; do
+        get_record_info "$sub.$domain"
+    done
 else
-  get_subdomain_info "$domain" "$subdomain"
+    get_record_info "$subdomain.$domain"
 fi
+
